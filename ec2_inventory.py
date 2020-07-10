@@ -101,7 +101,7 @@ def main():
     validated_accounts = validate_credentials(accounts, account_list)
     file = open(report_filename, 'w+')
     print_string_hdr = "account,owner_id,region,reservation_id,instance_id,state,image_id,platform,instance_type,vpc_id," \
-    + "launch_time,age,network_interfaces,subnet_id,private_ip,private_dns_name,public_dns_name,name,keep_until,managed_by,tag_qty\n"
+    + "launch_time,age,network_interfaces,subnet_id,private_ip,private_dns_name,public_dns_name,name,keep_until,managed_by,tag_qty,project_name,owner_email,cost_center\n"
     file.write(print_string_hdr)
     regions = get_regions(validated_accounts[0])
     for account in validated_accounts:
@@ -165,7 +165,7 @@ def main():
                                         if key3 == "Platform":
                                             platform = value3
                                         if key3 == "Tags":
-                                            name = keep_until = managed_by = tag_qty = ""
+                                            name = keep_until = managed_by = tag_qty = project_name = owner_email = cost_center =  ""
                                             for dictionary in value3:
                                                 key4 = dictionary['Key']
                                                 value4 = dictionary['Value']
@@ -175,12 +175,18 @@ def main():
                                                     keep_until = '"' + value4 + '"'
                                                 if key4 == 'ManagedBy':
                                                     managed_by = '"' + value4 + '"'
+                                                if key4 == 'jbl:project_name':
+                                                    project_name = '"' + value4 + '"'
+                                                if key4 == 'jbl:owner_email':
+                                                    owner_email = '"' + value4 + '"'
+                                                if key4 == 'jbl:cost_center':
+                                                    cost_center = '"' + value4 + '"'
                                             tag_qty = str(len(value3))
 
                         print_string = account + ",'" + owner_id + "'," + region + "'," + reservation_id + "," + instance_id + "," + \
                             state + "," + image_id + "," + platform + "," + instance_type + "," + vpc_id + "," + launch_time + "," + \
                             age + "," + network_interfaces + "," + subnet_id + "," + private_ip + "," + private_dns_name + "," + \
-                            public_dns_name + "," + name + "," + keep_until + "," + managed_by + "," + tag_qty
+                            public_dns_name + "," + name + "," + keep_until + "," + managed_by + "," + tag_qty + "," + project_name + "," + owner_email + "," + cost_center
                         print(print_string)
                         file.write(print_string + "\n")
     file.close()
